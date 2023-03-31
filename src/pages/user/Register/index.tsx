@@ -1,26 +1,33 @@
+import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import { message, Tabs } from 'antd';
+import React, { useState } from 'react';
+import { history } from 'umi';
 import Footer from '@/components/Footer';
-import {register} from '@/services/ant-design-pro/api';
-import {LockOutlined, UserOutlined,} from '@ant-design/icons';
-import {LoginForm, ProFormText,} from '@ant-design/pro-components';
-import {message, Tabs} from 'antd';
-import React, {useState} from 'react';
-import {history} from 'umi';
+import { register } from '@/services/ant-design-pro/api';
 import styles from './index.less';
+import { LoginForm, ProFormText } from '@ant-design/pro-form';
+import { Link } from '@umijs/preset-dumi/lib/theme';
 
 const Register: React.FC = () => {
   const [type, setType] = useState<string>('account');
+
+  // 表单提交
   const handleSubmit = async (values: API.RegisterParams) => {
-    const {username, password, confirmPassword} = values;
+    const { password, confirmPassword } = values;
+    // 校验
     if (password !== confirmPassword) {
       message.error('两次输入的密码不一致');
       return;
     }
+
     try {
       // 注册
       const id = await register(values);
-      if (id >= 0) {
+
+      if (id) {
         const defaultLoginSuccessMessage = '注册成功！';
         message.success(defaultLoginSuccessMessage);
+
         /** 此方法会跳转到 redirect 参数所在的位置 */
         if (!history) return;
         const { query } = history.location;
@@ -29,12 +36,10 @@ const Register: React.FC = () => {
           query,
         });
         return;
-      } else {
-        throw new Error(`register error id = ${id}`);
       }
-    } catch (error) {
+    } catch (error: any) {
       const defaultLoginFailureMessage = '注册失败，请重试！';
-      message.error(defaultLoginFailureMessage);
+      message.error(error.message ?? defaultLoginFailureMessage);
     }
   };
 
@@ -44,8 +49,8 @@ const Register: React.FC = () => {
         <LoginForm
           submitter={{
             searchConfig: {
-              submitText: '注册'
-            }
+              submitText: '注册',
+            },
           }}
           logo={<img alt="logo" src="/logo.svg" />}
           title="用户中心"
@@ -91,8 +96,8 @@ const Register: React.FC = () => {
                   {
                     min: 8,
                     type: 'string',
-                    message: '密码长度不少于8位',
-                  }
+                    message: '必须同时包含数字和字母，长度不能小于8位',
+                  },
                 ]}
               />
               <ProFormText.Password
@@ -101,7 +106,7 @@ const Register: React.FC = () => {
                   size: 'large',
                   prefix: <LockOutlined className={styles.prefixIcon} />,
                 }}
-                placeholder={'确认密码'}
+                placeholder="请再次输入密码"
                 rules={[
                   {
                     required: true,
@@ -110,19 +115,45 @@ const Register: React.FC = () => {
                   {
                     min: 8,
                     type: 'string',
-                    message: '密码长度不少于8位',
-                  }
+                    message: '长度不能小于 8',
+                  },
+                ]}
+              />
+              <ProFormText
+                name="invitationCode"
+                fieldProps={{
+                  size: 'large',
+                  prefix: <UserOutlined className={styles.prefixIcon} />,
+                }}
+                placeholder="邀请码（非必填）"
+                rules={[
+                  {
+                    required: false,
+                  },
+                ]}
+              />
+              <ProFormText
+                name="verificationCode"
+                fieldProps={{
+                  size: 'large',
+                  prefix: <UserOutlined className={styles.prefixIcon} />,
+                }}
+                placeholder={'验证码'}
+                rules={[
+                  {
+                    required: true,
+                    message: '验证码是必填项！',
+                  },
                 ]}
               />
             </>
           )}
-
-          {status === 'error' && loginType === 'mobile' && <LoginMessage content="验证码错误" />}
           <div
             style={{
               marginBottom: 24,
             }}
           >
+            <Link to="/user/login">登录</Link>
           </div>
         </LoginForm>
       </div>
@@ -130,4 +161,5 @@ const Register: React.FC = () => {
     </div>
   );
 };
+
 export default Register;

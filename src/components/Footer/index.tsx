@@ -1,7 +1,7 @@
 import { GithubOutlined } from '@ant-design/icons';
 import { DefaultFooter } from '@ant-design/pro-components';
 const Footer: React.FC = () => {
-  const defaultMessage = '雨晨';
+  const defaultMessage = 'yuch';
   const currentYear = new Date().getFullYear();
   return (
     <DefaultFooter
@@ -15,7 +15,11 @@ const Footer: React.FC = () => {
         },
         {
           key: 'github',
-          title: <><GithubOutlined /> github</>,
+          title: (
+            <>
+              <GithubOutlined /> github
+            </>
+          ),
           href: 'https://github.com/yuch-li',
           blankTarget: true,
         },

@@ -1,18 +1,13 @@
 import Footer from '@/components/Footer';
 import { login } from '@/services/ant-design-pro/api';
-import {
-  LockOutlined,
-  UserOutlined,
-} from '@ant-design/icons';
-import {
-  LoginForm,
-  ProFormCheckbox,
-  ProFormText,
-} from '@ant-design/pro-components';
+import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import { LoginForm, ProFormCheckbox, ProFormText } from '@ant-design/pro-components';
 import { Alert, message, Tabs } from 'antd';
 import React, { useState } from 'react';
 import { history, useModel } from 'umi';
 import styles from './index.less';
+import { Link } from '@umijs/preset-dumi/lib/theme';
+
 const LoginMessage: React.FC<{
   content: string;
 }> = ({ content }) => (
@@ -65,7 +60,7 @@ const Login: React.FC = () => {
       message.error(defaultLoginFailureMessage);
     }
   };
-  const { status, type: loginType } = userLoginState;
+  // const { status, type: loginType } = userLoginState;
   return (
     <div className={styles.container}>
       <div className={styles.content}>
@@ -84,9 +79,9 @@ const Login: React.FC = () => {
             <Tabs.TabPane key="account" tab={'登录'} />
           </Tabs>
 
-          {status === 'error' && loginType === 'account' && (
-            <LoginMessage content={'错误的用户名和密码'} />
-          )}
+          {/*{status === 'error' && loginType === 'account' && (*/}
+          {/*  <LoginMessage content={'错误的用户名和密码'} />*/}
+          {/*)}*/}
           {type === 'account' && (
             <>
               <ProFormText
@@ -119,13 +114,13 @@ const Login: React.FC = () => {
                     min: 8,
                     type: 'string',
                     message: '密码长度不少于8位',
-                  }
+                  },
                 ]}
               />
             </>
           )}
 
-          {status === 'error' && loginType === 'mobile' && <LoginMessage content="验证码错误" />}
+          {/*{status === 'error' && loginType === 'mobile' && <LoginMessage content="验证码错误" />}*/}
           <div
             style={{
               marginBottom: 24,
@@ -140,8 +135,9 @@ const Login: React.FC = () => {
               }}
               // href={}
             >
-              忘记密码？那就忘记吧
+              忘记密码？
             </a>
+            <Link to="/user/register">注册</Link>
           </div>
         </LoginForm>
       </div>
